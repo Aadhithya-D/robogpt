@@ -10,7 +10,7 @@ class ConversationManager {
 
   static HomePageController controller = Get.find();
 
-  static var API_KEY = "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";
+  static var API_KEY = "XXXXXXXX";
 
   static var chatHistory =  [{
     "role": "system",
