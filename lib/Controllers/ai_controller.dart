@@ -1,18 +1,28 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:robogpt/Models/chat_model.dart';
 import 'package:get/get.dart';
-import 'package:robogpt/Services/conversation_manager.dart';
+import 'package:langchain/langchain.dart';
+import 'package:robogpt/Services/chat_service.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
-class HomePageController extends GetxController {
+
+class AiController extends GetxController{
+  var isDark;
+  var aiResponse = "".obs;
+  var chatHistory = <ChatModel>[].obs;
+  var humanHistory = <String>[].obs;
+  static var memory = ConversationBufferMemory();
+  var itemList = <String>[].obs;
   final stt.SpeechToText _speech = stt.SpeechToText();
   RxBool isListening = false.obs;
   RxString text = 'Press the button and start speaking'.obs;
-  RxString robo_response = "".obs;
   RxString errorMessage = ''.obs;
   RxBool isProcessing = false.obs;
-  RxList<Map<String,String>> chatHistory = [{"system":"Hello I am RoboGPT. How may I assist you?"}].obs;
+
 
   @override
   void onInit() {
+    // TODO: implement onInit
     super.onInit();
     _initializeSpeech();
   }
@@ -81,8 +91,19 @@ class HomePageController extends GetxController {
     isListening.value = false;
     isProcessing.value = false;
     _speech.stop();
-    robo_response.value = await ConversationManager.generateResponse();
-    chatHistory.value = ConversationManager.getChatHistory();
+    humanHistory.add(text.value);
+    var newChat = await ChatService().getActions(text.value);
+    var db = FirebaseFirestore.instance;
+    List<String> actionArray = newChat.aiMessage.replaceAll('[', '').replaceAll('"]', '')
+        .replaceAll(']', '').replaceAll('"', '')
+        .split(', ');
+    db.collection("ArmControl").doc("Control").update({"commands": actionArray});
+    print(newChat.aiMessage);
+    print(newChat.humanMessage);
+    var newChat1 = await ChatService().chat(text.value, newChat.aiMessage);
+    chatHistory.add(newChat1);
+    db.collection("ArmControl").doc("Control").update({"commands": actionArray});
+    print(chatHistory.length);
     print('Stopped listening');
   }
 }

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "417838890060",
+    "project_id": "robogpt-1bc91",
+    "storage_bucket": "robogpt-1bc91.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:417838890060:android:db832e90fa0678cbc708e9",
+        "android_client_info": {
+          "package_name": "com.example.robogpt"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJT30h64vCn6kqCCxwhNbwg00Nfe8j1M0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
